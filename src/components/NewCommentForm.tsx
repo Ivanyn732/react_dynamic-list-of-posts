@@ -14,20 +14,24 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const nameTrimmed = name.trim();
+  const emailTrimmed = email.trim();
+  const bodyTrimmed = body.trim();
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const newErrors: { [key: string]: string } = {};
 
-    if (!name) {
+    if (!nameTrimmed) {
       newErrors.name = 'Name is required';
     }
 
-    if (!email) {
+    if (!emailTrimmed) {
       newErrors.email = 'Email is required';
     }
 
-    if (!body) {
+    if (!bodyTrimmed) {
       newErrors.body = 'Enter some text';
     }
 

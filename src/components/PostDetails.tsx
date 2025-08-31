@@ -24,13 +24,11 @@ export const PostDetails: React.FC<Props> = ({ postId, post: initialPost }) => {
     setComments(current => [...current, newComment]);
   };
 
-  const handleDeleteComment = async (commentId: number) => {
-    try {
-      await client.delete(`/comments/${commentId}`);
-      setComments(current => current.filter(c => c.id !== commentId));
-    } catch {
+  const handleDeleteComment = (commentId: number) => {
+    setComments(current => current.filter(c => c.id !== commentId));
+    client.delete(`/comments/${commentId}`).catch(() => {
       alert('Failed to delete comment');
-    }
+    });
   };
 
   useEffect(() => {
@@ -49,7 +47,7 @@ export const PostDetails: React.FC<Props> = ({ postId, post: initialPost }) => {
         .catch(() => setPostError('Failed to load post'))
         .finally(() => setIsLoadingPost(false));
     } else {
-      setPost(initialPost);
+      setPost(initialPost || null);
       setIsLoadingPost(false);
     }
   }, [postId, initialPost]);
@@ -69,14 +67,14 @@ export const PostDetails: React.FC<Props> = ({ postId, post: initialPost }) => {
   return (
     <div className="content" data-cy="PostDetails">
       {postError && <div className="notification is-danger">{postError}</div>}
-      {isLoadingPost}
+      {isLoadingPost && <Loader />}
 
       <>
         <div className={`block ${!post ? 'is-hidden' : ''}`}>
           <h2 data-cy="PostTitle">
-            #{post?.id ?? ''}: {post?.title ?? ''}
+            #{post?.id || ''}: {post?.title || ''}
           </h2>
-          <p data-cy="PostBody">{post?.body ?? ''}</p>
+          <p data-cy="PostBody">{post?.body || ''}</p>
         </div>
 
         <div className="block">
