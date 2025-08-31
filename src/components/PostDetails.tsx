@@ -4,6 +4,7 @@ import { NewCommentForm } from './NewCommentForm';
 import { Post } from '../types/Post';
 import { client } from '../utils/fetchClient';
 import { Comment } from '../types/Comment';
+import PropTypes from 'prop-types';
 
 type Props = {
   postId: number;
@@ -143,4 +144,14 @@ export const PostDetails: React.FC<Props> = ({ postId, post: initialPost }) => {
       </>
     </div>
   );
+};
+
+PostDetails.propTypes = {
+  postId: PropTypes.number.isRequired,
+  post: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    userId: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    body: PropTypes.string.isRequired,
+  }),
 };
