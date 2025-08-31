@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { client } from '../utils/fetchClient';
 import { Comment } from '../types/Comment';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'; //
 
 type Props = {
   postId: number;
