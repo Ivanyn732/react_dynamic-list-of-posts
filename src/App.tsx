@@ -69,23 +69,6 @@ export const App: React.FC = () => {
     loadPosts();
   }, [selectedUserId]);
 
-  // useEffect(() => {
-  //   if (!selectedUserId) {
-  //     setPosts([]);
-
-  //     return;
-  //   }
-
-  //   setIsLoadingPosts(true);
-  //   setPostsError(null);
-
-  //   client
-  //     .get<Post[]>(`/posts?userId=${selectedUserId}`)
-  //     .then(setPosts)
-  //     .catch(() => setPostsError('Failed to load posts'))
-  //     .finally(() => setIsLoadingPosts(false));
-  // }, [selectedUserId]);
-
   const showNoPostsMessage =
     !isLoadingPosts && !postsError && selectedUserId && posts.length === 0;
 
@@ -113,10 +96,9 @@ export const App: React.FC = () => {
                 {usersError && (
                   <div
                     className="notification is-danger"
-                    data-cy="UsersLoadingError" //"PostsLoadingError"
+                    data-cy="UsersLoadingError"
                   >
                     {usersError}
-                    {/* Something went wrong! */}
                   </div>
                 )}
 
