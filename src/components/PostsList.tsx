@@ -1,6 +1,18 @@
 import React from 'react';
+import { Post } from '../types/Post';
+import classNames from 'classnames';
 
-export const PostsList: React.FC = () => (
+type Props = {
+  posts: Post[];
+  selectedPostId: number | null;
+  onSelect: (postId: number | null) => void;
+};
+
+export const PostsList: React.FC<Props> = ({
+  posts,
+  selectedPostId,
+  onSelect,
+}) => (
   <div data-cy="PostsList">
     <p className="title">Posts:</p>
 
@@ -15,6 +27,33 @@ export const PostsList: React.FC = () => (
       </thead>
 
       <tbody>
+        {posts.map(post => (
+          <tr key={post.id} data-cy="Post">
+            <td data-cy="PostId">{post.id}</td>
+
+            <td data-cy="PostTitle">{post.title}</td>
+
+            <td className="has-text-right is-vcentered">
+              <button
+                type="button"
+                data-cy="PostButton"
+                className={classNames(
+                  'button',
+                  'is-link',
+                  selectedPostId === post.id ? '' : 'is-light',
+                )}
+                onClick={() =>
+                  onSelect(selectedPostId === post.id ? null : post.id)
+                }
+              >
+                {selectedPostId === post.id ? 'Close' : 'Open'}
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+
+      {/* <tbody>
         <tr data-cy="Post">
           <td data-cy="PostId">17</td>
 
@@ -80,7 +119,7 @@ export const PostsList: React.FC = () => (
             </button>
           </td>
         </tr>
-      </tbody>
+      </tbody> */}
     </table>
   </div>
 );
