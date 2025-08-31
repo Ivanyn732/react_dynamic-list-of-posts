@@ -48,8 +48,6 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
 
       onAdd(newComment);
 
-      setName('');
-      setEmail('');
       setBody('');
       setErrors({});
     } catch {
@@ -93,7 +91,11 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
           )}
         </div>
 
-        {errors.name && <p className="help is-danger">{errors.name}</p>}
+        {errors.name && (
+          <p className="help is-danger" data-cy="ErrorMessage">
+            {errors.name}
+          </p>
+        )}
       </div>
 
       <div className="field" data-cy="EmailField">
@@ -128,7 +130,11 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
             </span>
           )}
         </div>
-        {errors.email && <p className="help is-danger">{errors.email}</p>}
+        {errors.email && (
+          <p className="help is-danger" data-cy="ErrorMessage">
+            {errors.email}
+          </p>
+        )}
       </div>
 
       <div className="field" data-cy="BodyField">
@@ -149,7 +155,11 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
             }}
           />
         </div>
-        {errors.body && <p className="help is-danger">{errors.body}</p>}
+        {errors.body && (
+          <p className="help is-danger" data-cy="ErrorMessage">
+            {errors.body}
+          </p>
+        )}
       </div>
 
       <div className="field is-grouped">
@@ -166,7 +176,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
 
         <div className="control">
           <button
-            type="button"
+            type="reset"
             className="button is-link is-light"
             onClick={() => {
               setName('');

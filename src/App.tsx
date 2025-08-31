@@ -158,7 +158,12 @@ export const App: React.FC = () => {
             )}
           >
             <div className="tile is-child box is-success ">
-              {selectedPostId && <PostDetails postId={selectedPostId} />}
+              {selectedPostId && (
+                <PostDetails
+                  postId={selectedPostId}
+                  post={posts.find(p => p.id === selectedPostId) || null}
+                />
+              )}
             </div>
           </div>
         </div>

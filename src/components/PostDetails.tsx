@@ -7,10 +7,11 @@ import { Comment } from '../types/Comment';
 
 type Props = {
   postId: number;
+  post?: Post | null;
 };
 
-export const PostDetails: React.FC<Props> = ({ postId }) => {
-  const [post, setPost] = useState<Post | null>(null);
+export const PostDetails: React.FC<Props> = ({ postId, post: initialPost }) => {
+  const [post, setPost] = useState<Post | null>(initialPost || null);
   const [postError, setPostError] = useState<string | null>(null);
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -23,33 +24,44 @@ export const PostDetails: React.FC<Props> = ({ postId }) => {
     setComments(current => [...current, newComment]);
   };
 
-  const handleDeleteComment = (commentId: number) => {
-    setComments(current => current.filter(c => c.id !== commentId));
-  };
-
-  // const handleDeleteComment = async (commentId: number) => {
-  //   try {
-  //     await client.delete(`/comments/${commentId}`);
-  //     setComments(current => current.filter(c => c.id !== commentId));
-  //   } catch {
-  //     alert('Failed to delete comment');
-  //   }
+  // const handleDeleteComment = (commentId: number) => {
+  //   setComments(current => current.filter(c => c.id !== commentId));
   // };
 
-  useEffect(() => {
-    setIsLoadingPost(true);
-    setPostError(null);
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      await client.delete(`/comments/${commentId}`);
+      setComments(current => current.filter(c => c.id !== commentId));
+    } catch {
+      alert('Failed to delete comment');
+    }
+  };
 
-    client
-      .get<Post>(`/posts/${postId}`)
-      .then(setPost)
-      .catch(() => setPostError('Failed to load post'))
-      .finally(() => setIsLoadingPost(false));
-  }, [postId]);
+  useEffect(() => {
+    setIsFormVisible(false);
+    setComments([]);
+    setIsLoadingComments(false);
+    setCommentsError(null);
+
+    if (!initialPost) {
+      setIsLoadingPost(true);
+      setPostError(null);
+
+      client
+        .get<Post>(`/posts/${postId}`)
+        .then(setPost)
+        .catch(() => setPostError('Failed to load post'))
+        .finally(() => setIsLoadingPost(false));
+    } else {
+      setPost(initialPost);
+      setIsLoadingPost(false);
+    }
+  }, [postId, initialPost]);
 
   useEffect(() => {
     setIsLoadingComments(true);
     setCommentsError(null);
+    setIsFormVisible(false);
 
     client
       .get<Comment[]>(`/comments?postId=${postId}`)
@@ -119,14 +131,14 @@ export const PostDetails: React.FC<Props> = ({ postId }) => {
             </>
           )}
 
-          {!isLoadingComments && !commentsError && (
+          {!isFormVisible && !isLoadingComments && !commentsError && (
             <button
               data-cy="WriteCommentButton"
               type="button"
               className="button is-link"
-              onClick={() => setIsFormVisible(prev => !prev)}
+              onClick={() => setIsFormVisible(true)}
             >
-              {isFormVisible ? 'Cancel' : 'Write a comment'}
+              Write a comment
             </button>
           )}
         </div>
